@@ -1,5 +1,5 @@
 [project]
-name = "mmu-proxy"
+name = "llm-mmu"
 version = "0.1.0"
 description = "Model Memory Unit — transparent demand paging for LLM context windows"
 readme = "README.md"
@@ -16,12 +16,6 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
   "Topic :: Software Development :: Libraries",
 ]
-
-[project.urls]
-Homepage = "https://github.com/kaseban/llm-mmu"
-Repository = "https://github.com/kaseban/llm-mmu"
-Issues = "https://github.com/kaseban/llm-mmu/issues"
-Changelog = "https://github.com/kaseban/llm-mmu/releases"
 dependencies = [
   "starlette>=0.40",
   "uvicorn>=0.30",
@@ -38,6 +32,12 @@ dev = [
 
 [project.scripts]
 mmu = "mmu.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Kaseban/llm-mmu"
+Repository = "https://github.com/Kaseban/llm-mmu"
+Issues = "https://github.com/Kaseban/llm-mmu/issues"
+Changelog = "https://github.com/Kaseban/llm-mmu/releases"
 
 [build-system]
 requires = ["hatchling"]

@@ -5,8 +5,8 @@ context out of the window — and faults it back in only when the model asks.
 **No SDK. No framework. No code changes.**
 
 [![CI](https://github.com/kaseban/llm-mmu/actions/workflows/ci.yml/badge.svg)](https://github.com/kaseban/llm-mmu/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/mmu-proxy)](https://pypi.org/project/mmu-proxy/)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://pypi.org/project/mmu-proxy/)
+[![PyPI](https://img.shields.io/pypi/v/llm-mmu)](https://pypi.org/project/llm-mmu/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://pypi.org/project/llm-mmu/)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 
 ```
@@ -35,7 +35,7 @@ added latency, zero behavioral difference for the client.
 ## Quick start
 
 ```sh
-pip install mmu-proxy        # or: pipx install mmu-proxy / uv tool install mmu-proxy
+pip install llm-mmu          # or: pipx install llm-mmu / uv tool install llm-mmu
 mmu proxy                    # starts on 127.0.0.1:4004
 ```
 
