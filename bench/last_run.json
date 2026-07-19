@@ -1,0 +1,28 @@
+[
+  {
+    "mode": "passthrough",
+    "upstream_tokens": 972030,
+    "peak_request_tokens": 62709,
+    "final_request_tokens": 62709,
+    "tokens_saved": 0,
+    "faults": 0,
+    "avg_overhead_ms": 0.9,
+    "p50_ms": 2.6336669689044356,
+    "p95_ms": 4.005249938927591,
+    "wall_s": 0.09161345905158669,
+    "client_final_tokens": 62720
+  },
+  {
+    "mode": "paging",
+    "upstream_tokens": 248930,
+    "peak_request_tokens": 9847,
+    "final_request_tokens": 8013,
+    "tokens_saved": 712155,
+    "faults": 0,
+    "avg_overhead_ms": 2.566666666666667,
+    "p50_ms": 3.9094375097192824,
+    "p95_ms": 5.842249956913292,
+    "wall_s": 0.12738550000358373,
+    "client_final_tokens": 62720
+  }
+]
