@@ -111,6 +111,47 @@ pip install -e ".[dev]"
 python bench/e2e_bench.py --turns 30 --tool-tokens 2000
 ```
 
+### Accuracy / context integrity
+
+*"Does paging lose information the model needed?"* — measured with a
+[NIAH](https://github.com/gkamradt/LLMTest_NeedleInAHaystack)/
+[RULER](https://arxiv.org/abs/2404.06654)-style multi-needle benchmark
+(`bench/accuracy_bench.py`): every turn buries a unique random secret
+mid-way inside that turn's large tool result; the session grows far past the
+paging budget so old facts get evicted; the client then probes for old
+secrets, both periodically and in a final sweep.
+
+The default **oracle upstream** is a deterministic stand-in for a competent
+model: it answers a probe only if the *literal secret bytes* are present in
+the request it receives, and issues the stub's `mmu recall <id>` when they
+are not. Eventual accuracy therefore measures byte-level *context
+integrity* — whether the paging layer ever made a fact unreachable —
+independent of any particular model's retrieval skill.
+
+| metric | passthrough | paging (120 turns / 240k tok) | paging (500 turns / **~1M tok**) |
+|---|---|---|---|
+| probes answered correctly | 32/32 | 32/32 | 145/145 |
+| facts lost | 0 | **0** | **0** |
+| eventual accuracy | 100% | **100%** | **100%** |
+| recovered via page fault | — | 32 (1 round trip each) | 145 (1 round trip each) |
+| cumulative upstream tokens saved | — | 22.8M | 391M |
+
+Every evicted fact was recovered with exactly one `mmu recall` round trip;
+across a ~1M-token session nothing became unreachable. Reproduce:
+
+```sh
+python bench/accuracy_bench.py                              # 120 turns, both modes
+python bench/accuracy_bench.py --turns 500 --modes paging   # ~1M-token stress run
+```
+
+There is also a `--live` mode that runs the same protocol through the real
+Anthropic API (`ANTHROPIC_API_KEY`, costs money) to measure true end-to-end
+*model* accuracy rather than mechanism integrity:
+
+```sh
+python bench/accuracy_bench.py --live --model claude-haiku-4-5-20251001 --turns 40
+```
+
 ## Project layout
 
 ```
@@ -124,13 +165,15 @@ src/mmu/
   proxy/sse.py      # incremental SSE parser (observer branch)
   paging/engine.py  # eviction/stub/fault engine (fail-open rewrite hook)
   store/            # SQLite (WAL) schema + accessors
-bench/e2e_bench.py  # passthrough-vs-paging benchmark over real HTTP
+bench/e2e_bench.py       # passthrough-vs-paging benchmark over real HTTP
+bench/accuracy_bench.py  # NIAH/RULER-style context-integrity benchmark
 ```
 
 ## Roadmap
 
 - [x] **M0** — transparent proxy, session tracking, token/latency accounting
 - [x] **M1** — LRU demand paging, stub/recall page faults, e2e benchmark
+- [x] **M1.5** — accuracy/integrity benchmark (needle retrieval @ ~1M tokens)
 - [ ] **M2** — summarize tier (compress instead of stub), per-block TTLs
 - [ ] **M3** — smarter eviction (attention-proxy scoring), multi-session store GC
 - [ ] Streaming-tool-use edge cases, OpenAI Responses API, provider matrix
@@ -143,7 +186,7 @@ paging misbehaves, new eviction policies (`src/mmu/paging/policies/`), and
 provider adapter coverage.
 
 ```sh
-pip install -e ".[dev]" && pytest -q   # 17 tests, <1s
+pip install -e ".[dev]" && pytest -q   # 19 tests, ~2s
 ```
 
 ## References & prior art

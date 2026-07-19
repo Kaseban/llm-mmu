@@ -1,0 +1,17 @@
+[
+  {
+    "mode": "paging+oracle",
+    "turns": 500,
+    "planted_tokens": 1000000,
+    "final_context_tokens": 1062360,
+    "probes": 145,
+    "first_try_hits": 0,
+    "recovered_via_fault": 145,
+    "lost": 0,
+    "eventual_accuracy": 1.0,
+    "avg_round_trips": 2.0,
+    "engine_faults": 145,
+    "tokens_saved": 391394712,
+    "wall_s": 35.1
+  }
+]
