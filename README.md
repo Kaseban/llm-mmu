@@ -146,6 +146,25 @@ provider adapter coverage.
 pip install -e ".[dev]" && pytest -q   # 17 tests, <1s
 ```
 
+## References & prior art
+
+`llm-mmu` is an independent, from-scratch implementation of the direction
+proposed in:
+
+> Tony Mason, **“The Missing Memory Hierarchy: Demand Paging for LLM Context
+> Windows”**, arXiv:2603.09023 (2026).
+> <https://arxiv.org/abs/2603.09023>
+
+The paper makes the case for mapping OS virtual memory — pages, eviction,
+faults — onto LLM context windows. `llm-mmu` explores that idea as a fully
+client-transparent local proxy: no SDK or harness changes, session identity
+via message-prefix hashing, self-describing stubs with one-round-trip
+`mmu recall` page faults, and fail-open passthrough as a hard invariant.
+
+Related prior art: MemGPT (arXiv:2310.08560) pioneered virtual-context
+management from *inside* the agent framework; `llm-mmu` differs by living at
+the transport layer, so any unmodified client benefits.
+
 ## License
 
 [Apache-2.0](LICENSE)
